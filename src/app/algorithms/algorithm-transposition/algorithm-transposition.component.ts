@@ -16,71 +16,55 @@ export class AlgorithmTranspositionComponent implements OnInit {
   }
 
   encrypt(encryption) {
-    const ciphertextArray = [];
-
-    _.each(encryption.plaintext, (letter, index) => {
-      const plaintextLetter = encryption.plaintext[index];
-      const keyLetter = encryption.key[index];
-
-      const plaintextCharCode = plaintextLetter.charCodeAt();
-      let keyCharCode = 0;
-
-      if (!!keyLetter) {
-        keyCharCode = keyLetter.charCodeAt();
-      }
-
-      this.setItemTo(ciphertextArray, plaintextCharCode, keyCharCode, true);
-    });
-
-    encryption.ciphertext = ciphertextArray.join('');
+    encryption.ciphertext = this.formCharFrom(encryption, true);
   }
 
   decrypt(decryption) {
-    const plaintextArray = [];
+    decryption.plaintext = this.formCharFrom(decryption, false);
+  }
 
-    _.each(decryption.ciphertext, (letter, index) => {
-      const ciphertextLetter = letter;
-      const keyLetter = decryption.key[index];
-
-      const ciphertextCharCode = ciphertextLetter.charCodeAt();
+  formCharFrom(target, isEncryption) {
+    return _.map(target[isEncryption === true ? 'plaintext' : 'ciphertext'], (letter, index) => {
+      const keyLetter = target.key[index];
+      const textCharCode = letter.charCodeAt(0);
       let keyCharCode = 0;
 
+      if (!(65 <= textCharCode && textCharCode <= 90) && !(97 <= textCharCode && textCharCode <= 122)) {
+        return letter;
+      }
+
       if (!!keyLetter) {
-        keyCharCode = keyLetter.charCodeAt();
+        keyCharCode = keyLetter.charCodeAt(0);
       }
 
-      this.setItemTo(plaintextArray, ciphertextCharCode, keyCharCode, false);
-    });
-
-    decryption.plaintext = plaintextArray.join('');
+      return this.getCharFrom(textCharCode, keyCharCode, isEncryption);
+    }).join('');
   }
 
-  setItemTo(targetArray, charCode, keyCharCode, isEncryption) {
+  getCharFrom(charCode, keyCharCode, isEncryption) {
     let baseCharCode = 65;
+    let keyLetterNumber = 0;
 
-    if (65 <= charCode && charCode <= 90) {
-      const keyLetterNumber = keyCharCode === 0 ? 0 : keyCharCode - baseCharCode + 1;
-      const letterNumber = (charCode - baseCharCode + 1) + (isEncryption === true ? keyLetterNumber - 1 : -keyLetterNumber + 1);
-
-      if (letterNumber > 26) {
-        targetArray.push(String.fromCharCode(letterNumber - 26 + baseCharCode - 1));
-      } else if (letterNumber < 1) {
-        targetArray.push(String.fromCharCode(letterNumber + 26 + baseCharCode - 1));
-      } else if (1 <= letterNumber && letterNumber <= 26) {
-        targetArray.push(String.fromCharCode(letterNumber + baseCharCode - 1));
-      }
-    } else if (97 <= charCode && charCode <= 122) {
-      baseCharCode = 97;
-      const keyLetterNumber = keyCharCode === 0 ? 0 : keyCharCode - baseCharCode + 1;
-      const letterNumber = (charCode - baseCharCode + 1) + (isEncryption === true ? keyLetterNumber - 1 : -keyLetterNumber + 1);
-
-      if (letterNumber > 26) {
-        targetArray.push(String.fromCharCode(letterNumber - 26 + baseCharCode - 1));
-      } else if (letterNumber < 1) {
-        targetArray.push(String.fromCharCode(letterNumber + 26 + baseCharCode - 1));
-      } else if (1 <= letterNumber && letterNumber <= 26)  {
-        targetArray.push(String.fromCharCode(letterNumber + baseCharCode - 1));
-      }
+    if (65 <= keyCharCode && keyCharCode <= 90) {
+      keyLetterNumber = keyCharCode - 64;
+    } else if (97 <= keyCharCode && keyCharCode <= 122) {
+      keyLetterNumber = keyCharCode - 96;
     }
+
+    if (97 <= charCode && charCode <= 122) {
+      baseCharCode = 97;
+    }
+
+    const letterNumber = (charCode - baseCharCode + 1) + (isEncryption === true ? keyLetterNumber - 1 : -keyLetterNumber + 1);
+    charCode = letterNumber + baseCharCode - 1;
+
+    if (letterNumber > 26) {
+      charCode -= 26;
+    } else if (letterNumber < 1) {
+      charCode += 26;
+    }
+
+    return String.fromCharCode(charCode);
   }
+
 }

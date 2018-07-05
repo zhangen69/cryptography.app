@@ -9,6 +9,7 @@ import { routes } from './routing';
 import { AlgorithmCaesarShiftComponent } from './algorithms/algorithm-caesar-shift/algorithm-caesar-shift.component';
 import { AlgorithmRSAComponent } from './algorithms/algorithm-rsa/algorithm-rsa.component';
 import { AlphaOnlyDirective } from './directives/alpha-only.directive';
+import { UppercaseDirective } from './directives/uppercase.directive';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { AlphaOnlyDirective } from './directives/alpha-only.directive';
     AlgorithmTranspositionComponent,
     AlgorithmCaesarShiftComponent,
     AlgorithmRSAComponent,
-    AlphaOnlyDirective
+    AlphaOnlyDirective,
+    UppercaseDirective
   ],
   imports: [
     BrowserModule,
