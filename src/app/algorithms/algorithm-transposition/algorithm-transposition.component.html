@@ -1,0 +1,43 @@
+<h2>Transposition Cipher</h2>
+
+<div class="row">
+  <div class="col-sm-6">
+    <div class="form-group">
+      <label for="" class="control-label">Plaintext</label>
+      <input class="form-control" type="text" [(ngModel)]="encryption.plaintext" appAlphaOnly>
+    </div>
+    <div class="form-group">
+      <label for="" class="control-label">Key</label>
+      <input class="form-control" type="text" [(ngModel)]="encryption.key" appAlphaOnly>
+    </div>
+    <div class="text-right">
+      <button type="button" class="btn btn-primary" (click)="encrypt(encryption)" [disabled]="!encryption.plaintext || !encryption.key || !(encryption.plaintext.length === encryption.key.length)">Encrypt</button>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div>Ciphertext:</div>
+        <pre>{{ encryption.ciphertext }}</pre>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="form-group">
+      <label for="" class="control-label">Ciphertext</label>
+      <input class="form-control" type="text" [(ngModel)]="decryption.ciphertext" appAlphaOnly>
+    </div>
+    <div class="form-group">
+      <label for="" class="control-label">Key</label>
+      <input class="form-control" type="text" [(ngModel)]="decryption.key" appAlphaOnly>
+    </div>
+    <div class="text-right">
+      <button type="button" class="btn btn-primary" (click)="decrypt(decryption)" [disabled]="!decryption.ciphertext || !decryption.key || !(decryption.ciphertext.length === decryption.key.length)">Decrypt</button>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div>Plaintext:</div>
+        <pre>{{ decryption.plaintext }}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
