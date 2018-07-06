@@ -10,10 +10,12 @@ import { AlgorithmCaesarShiftComponent } from './algorithms/algorithm-caesar-shi
 import { AlgorithmRSAComponent } from './algorithms/algorithm-rsa/algorithm-rsa.component';
 import { AlphaOnlyDirective } from './directives/alpha-only.directive';
 import { UppercaseDirective } from './directives/uppercase.directive';
+import { AlgorithmVernamCipherComponent } from './algorithms/algorithm-vernam-cipher/algorithm-vernam-cipher.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    AlgorithmVernamCipherComponent,
     AlgorithmTranspositionComponent,
     AlgorithmCaesarShiftComponent,
     AlgorithmRSAComponent,

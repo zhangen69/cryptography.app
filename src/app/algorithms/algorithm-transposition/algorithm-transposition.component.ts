@@ -16,55 +16,25 @@ export class AlgorithmTranspositionComponent implements OnInit {
   }
 
   encrypt(encryption) {
-    encryption.ciphertext = this.formCharFrom(encryption, true);
-  }
+    // estimate we have a key
+    // and we convert the key string to key array
+    // since we have an array, then we place each letter from plaintext string
+    const resultArray = _.map(encryption.key);
+    const resultLetterNumberArray = [];
+    const plaintextArray = [];
 
-  decrypt(decryption) {
-    decryption.plaintext = this.formCharFrom(decryption, false);
-  }
+    for (let resultArrayIndex = 0; resultArrayIndex < resultArray.length; resultArrayIndex++) {
+      plaintextArray[resultArrayIndex] = [];
+      const charCode = resultArray[resultArrayIndex].charCodeAt(0);
+      // tslint:disable-next-line:max-line-length
+      resultLetterNumberArray[resultArrayIndex] = charCode - (65 <= charCode && charCode <= 90 ? 64 : 97 <= charCode && charCode <= 122 ? 96 : 0);
 
-  formCharFrom(target, isEncryption) {
-    return _.map(target[isEncryption === true ? 'plaintext' : 'ciphertext'], (letter, index) => {
-      const keyLetter = target.key[index];
-      const textCharCode = letter.charCodeAt(0);
-      let keyCharCode = 0;
-
-      if (!(65 <= textCharCode && textCharCode <= 90) && !(97 <= textCharCode && textCharCode <= 122)) {
-        return letter;
+      for (let index = 0; index < encryption.plaintext.length; index++) {
+        if (index === resultArrayIndex || index % (resultArray.length + resultArrayIndex)) {
+          plaintextArray[resultArrayIndex].push(encryption.plaintext[index]);
+        }
       }
-
-      if (!!keyLetter) {
-        keyCharCode = keyLetter.charCodeAt(0);
-      }
-
-      return this.getCharFrom(textCharCode, keyCharCode, isEncryption);
-    }).join('');
-  }
-
-  getCharFrom(charCode, keyCharCode, isEncryption) {
-    let baseCharCode = 65;
-    let keyLetterNumber = 0;
-
-    if (65 <= keyCharCode && keyCharCode <= 90) {
-      keyLetterNumber = keyCharCode - 64;
-    } else if (97 <= keyCharCode && keyCharCode <= 122) {
-      keyLetterNumber = keyCharCode - 96;
     }
-
-    if (97 <= charCode && charCode <= 122) {
-      baseCharCode = 97;
-    }
-
-    const letterNumber = (charCode - baseCharCode + 1) + (isEncryption === true ? keyLetterNumber - 1 : -keyLetterNumber + 1);
-    charCode = letterNumber + baseCharCode - 1;
-
-    if (letterNumber > 26) {
-      charCode -= 26;
-    } else if (letterNumber < 1) {
-      charCode += 26;
-    }
-
-    return String.fromCharCode(charCode);
   }
 
 }
