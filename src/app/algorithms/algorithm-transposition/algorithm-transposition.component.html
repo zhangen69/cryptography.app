@@ -11,7 +11,7 @@
       <input class="form-control" type="text" [(ngModel)]="encryption.key" appAlphaOnly>
     </div>
     <div class="text-right">
-      <button type="button" class="btn btn-primary" (click)="encrypt(encryption)" [disabled]="!encryption.plaintext || !encryption.key || !(encryption.plaintext.length === encryption.key.length)">Encrypt</button>
+      <button type="button" class="btn btn-primary" (click)="encrypt(encryption)" [disabled]="!encryption.plaintext || !encryption.key">Encrypt</button>
     </div>
     <div class="row">
       <div class="col">
@@ -30,7 +30,7 @@
       <input class="form-control" type="text" [(ngModel)]="decryption.key" appAlphaOnly>
     </div>
     <div class="text-right">
-      <button type="button" class="btn btn-primary" (click)="decrypt(decryption)" [disabled]="!decryption.ciphertext || !decryption.key || !(decryption.ciphertext.length === decryption.key.length)">Decrypt</button>
+      <button type="button" class="btn btn-primary" (click)="decrypt(decryption)" [disabled]="!decryption.ciphertext || !decryption.key">Decrypt</button>
     </div>
     <div class="row">
       <div class="col">
