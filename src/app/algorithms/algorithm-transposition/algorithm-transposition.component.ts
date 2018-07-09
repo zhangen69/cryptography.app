@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as _ from 'underscore';
 import { createEmptyStateSnapshot } from '@angular/router/src/router_state';
+import { SELECT_VALUE_ACCESSOR } from '@angular/forms/src/directives/select_control_value_accessor';
 
 @Component({
   selector: 'app-algorithm-transposition',
@@ -105,24 +106,13 @@ export class AlgorithmTranspositionComponent implements OnInit {
     // makes a matric from key string to key array
     _.each(keyArray, (key, keyArrayIndex) => {
       const charCode = keyArray[keyArrayIndex].charCodeAt(0);
-      let count = 0;
 
       ciphertextArray[keyArrayIndex] = {
         keyName: keyArray[keyArrayIndex],
         // tslint:disable-next-line:max-line-length
         key: resultLetterNumberArray[keyArrayIndex] = charCode - (65 <= charCode && charCode <= 90 ? 64 : (97 <= charCode && charCode <= 122 ? 96 : 0)),
-        values: _.chain(decryption.ciphertext).filter((p, i) => {
-          if (count === keyArray.length) {
-            count = 0;
-            baseNumberArray[keyArrayIndex] += keyArray.length;
-          }
-
-          count++;
-
-          if (i === baseNumberArray[keyArrayIndex]) {
-            return p;
-          }
-        }).value()
+        originKeyIndex: keyArrayIndex,
+        values: []
       };
     });
 
@@ -151,16 +141,68 @@ export class AlgorithmTranspositionComponent implements OnInit {
       resultLetterNumberArray.splice(_.findIndex(resultLetterNumberArray, (n) => n === smallestLetterNumber), 1);
     });
 
-    // get ciphertextArray from sortedKeyArray
+
+    const ciphertextArrayForTakeLetter = _.map(decryption.ciphertext);
+    const numberForStatic = decryption.ciphertext.length % keyArray.length;
+    let takeLetterLength = decryption.ciphertext.length / keyArray.length;
+
+    // set ciphertextArray to sortedKeyArray
     _.each(sortedKeyArray, (k) => {
       const selectedItem = _.find(ciphertextArray, (item) => item.key === k);
-      console.log(selectedItem);
-      _.each(selectedItem.values, (v) => resultLetterNumberArray.push(v));
-      ciphertextArray.splice(_.findIndex(ciphertextArray, (item) => item === selectedItem), 1);
+
+      if (numberForStatic === 0) { // each
+        for (let round = 0; round < (ciphertextArray.length % keyArray.length); round++) {
+          selectedItem.values[round] = ciphertextArrayForTakeLetter[0];
+          ciphertextArrayForTakeLetter.splice(0, 1);
+        }
+      } else {
+        // tslint:disable-next-line:max-line-length
+        const numberRepeat = Math.floor(((decryption.ciphertext.length / keyArray.length) - (Math.floor(decryption.ciphertext.length / keyArray.length))) * keyArray.length);
+        takeLetterLength = Math.ceil(decryption.ciphertext.length / keyArray.length);
+
+        if (selectedItem.originKeyIndex < numberRepeat) {
+          for (let round = 0; round < takeLetterLength; round++) {
+            selectedItem.values[round] = ciphertextArrayForTakeLetter[0];
+            ciphertextArrayForTakeLetter.splice(0, 1);
+          }
+        } else {
+          for (let round = 0; round < takeLetterLength - 1; round++) {
+            selectedItem.values[round] = ciphertextArrayForTakeLetter[0];
+            ciphertextArrayForTakeLetter.splice(0, 1);
+          }
+        }
+
+        console.log(selectedItem);
+      }
     });
 
-    decryption.plaintext = resultLetterNumberArray.join('');
+    // let's sorting back to original
+    _.each(_.sortBy(ciphertextArray, 'originKeyIndex'), (item, index) => {
+      let count = 0;
+      let valuePosition = index;
 
+      resultLetterNumberArray.push(item.values[index]);
+
+      for (let i = 0; i < decryption.ciphertext.length; i++) {
+        if (count === keyArray.length) {
+          count = 0;
+          valuePosition += keyArray.length;
+        }
+
+        count++;
+
+        if (i === valuePosition) {
+          resultLetterNumberArray[valuePosition] = item.values[0];
+          item.values.splice(0, 1);
+        }
+      }
+    });
+
+
+    console.log(resultLetterNumberArray);
+
+    debugger;
+    decryption.plaintext = resultLetterNumberArray.join('');
 
   }
 
