@@ -25,7 +25,7 @@ import { AlgorithmVernamCipherComponent } from './algorithms/algorithm-vernam-ci
   imports: [
     BrowserModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes, { useHash: true, enableTracing: true })
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -181,8 +181,6 @@ export class AlgorithmTranspositionComponent implements OnInit {
       let count = 0;
       let valuePosition = index;
 
-      // resultLetterNumberArray.push(item.values[index]);
-
       for (let i = 0; i < decryption.ciphertext.length; i++) {
         if (count === keyArray.length) {
           count = 0;
@@ -201,6 +199,4 @@ export class AlgorithmTranspositionComponent implements OnInit {
     decryption.plaintext = resultLetterNumberArray.join('');
 
   }
-
-
 }
