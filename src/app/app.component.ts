@@ -150,15 +150,18 @@ export class AppComponent {
 
 
     const ciphertextArrayForTakeLetter = _.map(decryption.ciphertext);
-    const numberForStatic = decryption.ciphertext.length % keyArray.length;
+    const ciphertextArrayForTakeLetterLength = ciphertextArrayForTakeLetter.length;
+    const numberForStatic = ciphertextArrayForTakeLetterLength % keyArray.length;
     let takeLetterLength = decryption.ciphertext.length / keyArray.length;
+    const updatedCiphertextArray = Object.assign({}, ciphertextArray);
 
     // set ciphertextArray to sortedKeyArray
-    _.each(sortedKeyArray, (k, i) => {
+    for (let i = 0; i < sortedKeyArray.length; i++) {
+      const k = sortedKeyArray[i];
       const selectedItem = _.find(ciphertextArray, (item) => item.key === k && item.values.length === 0);
 
       if (numberForStatic === 0) { // each
-        for (let round = 0; round < (ciphertextArray.length / keyArray.length); round++) {
+        for (let round = 0; round < (ciphertextArrayForTakeLetterLength / keyArray.length); round++) {
           selectedItem.values[round] = ciphertextArrayForTakeLetter[0];
           ciphertextArrayForTakeLetter.splice(0, 1);
         }
@@ -179,21 +182,11 @@ export class AppComponent {
           }
         }
 
+        // updatedCiphertextArray.push(selectedItem);
         console.log(selectedItem);
+        // ciphertextArray.splice(_.findIndex(ciphertextArray, (item) => item.key === k && item.values.length === 0), 1);
       }
-
-      // _.each(ciphertextArray, (item) => {
-      //   if (item.key === k) {
-      //     item = selectedItem;
-      //   }
-      // });
-      // console.log(ciphertextArray);
-    });
-
-    console.log(sortedKeyArray);
-    console.log(ciphertextArray);
-    // debugger;
-    // console.log(ciphertextArray);
+    }
 
     // let's sorting back to original
     _.each(_.sortBy(ciphertextArray, 'originKeyIndex'), (item, index) => {
