@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as _ from 'underscore';
 import { createEmptyStateSnapshot } from '@angular/router/src/router_state';
 import { SELECT_VALUE_ACCESSOR } from '@angular/forms/src/directives/select_control_value_accessor';
+import { debug } from 'util';
 
 @Component({
   selector: 'app-algorithm-transposition',
@@ -174,7 +175,15 @@ export class AlgorithmTranspositionComponent implements OnInit {
 
         console.log(selectedItem);
       }
+      // _.each(ciphertextArray, (item) => {
+      //   if (item.key === k) {
+      //     item = selectedItem;
+      //   }
+      // });
+      // console.log(ciphertextArray);
     });
+
+    // console.log(ciphertextArray);
 
     // let's sorting back to original
     _.each(_.sortBy(ciphertextArray, 'originKeyIndex'), (item, index) => {
@@ -196,6 +205,7 @@ export class AlgorithmTranspositionComponent implements OnInit {
       }
     });
 
+    // debugger;
     decryption.plaintext = resultLetterNumberArray.join('');
 
   }

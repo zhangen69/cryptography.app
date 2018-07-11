@@ -8,7 +8,7 @@ import { debug } from 'util';
   styleUrls: ['./algorithm-caesar-shift.component.css']
 })
 export class AlgorithmCaesarShiftComponent implements OnInit {
-  shiftType: any = 0;
+  shiftType: any = '0';
   numberOfShift: any = 1;
   encryption: any = {
     shiftType: this.shiftType,
@@ -19,10 +19,9 @@ export class AlgorithmCaesarShiftComponent implements OnInit {
     numberOfShift: this.numberOfShift
   };
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   encrypt(encryption) {
     encryption.ciphertext = this.formCharFrom(encryption, 'plaintext');
@@ -33,24 +32,42 @@ export class AlgorithmCaesarShiftComponent implements OnInit {
   }
 
   formCharFrom(targetObject, targetParam) {
-    return _.map(targetObject[targetParam], (letter) => { // form a array
-      let letterCode = letter.charCodeAt();
-      const baseCharCode = (65 <= letterCode && letterCode <= 90) ? 65 : ((97 <= letterCode && letterCode <= 122) ? 97 : 0);
+    return _
+      .map(targetObject[targetParam], letter => {
+        // form a array
+        let letterCode = letter.charCodeAt();
+        const baseCharCode =
+          65 <= letterCode && letterCode <= 90
+            ? 65
+            : 97 <= letterCode && letterCode <= 122
+              ? 97
+              : 0;
 
-      if (baseCharCode !== 0) { // :not(a-z) and :not(A-Z)
-        letterCode -= (baseCharCode - 1);
-        const cipherCode = this.getCharCodeFrom(targetObject, letterCode, targetParam === 'plaintext');
-        return this.getCharFrom(cipherCode, baseCharCode);
-      } else {
-        return String.fromCharCode(letterCode);
-      }
-    }).join(''); // join string from array
+        if (baseCharCode !== 0) {
+          // :not(a-z) and :not(A-Z)
+          letterCode -= baseCharCode - 1;
+          const cipherCode = this.getCharCodeFrom(
+            targetObject,
+            letterCode,
+            targetParam === 'plaintext'
+          );
+          return this.getCharFrom(cipherCode, baseCharCode);
+        } else {
+          return String.fromCharCode(letterCode);
+        }
+      })
+      .join(''); // join string from array
   }
 
   getCharCodeFrom(targetObject, letterCode, isEncryption) {
-    if ((targetObject.shiftType === 0 && isEncryption === true) || (targetObject.shiftType === 1 && isEncryption === true)) {
+    if (
+      (targetObject.shiftType === '0' && isEncryption === true) ||
+      (targetObject.shiftType === '1' && isEncryption === false)
+    ) {
       letterCode -= targetObject.numberOfShift;
-    } else if ((targetObject.shiftType === 0 && isEncryption === false) || (targetObject.shiftType === 1 && isEncryption === false)) {
+    } else if (
+      (targetObject.shiftType === '1' && isEncryption === true) || (targetObject.shiftType === '0' && isEncryption === false)
+    ) {
       letterCode += targetObject.numberOfShift;
     }
 
@@ -66,5 +83,4 @@ export class AlgorithmCaesarShiftComponent implements OnInit {
 
     return String.fromCharCode(charCode + (baseCharCode - 1));
   }
-
 }
