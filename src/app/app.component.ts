@@ -154,11 +154,11 @@ export class AppComponent {
     let takeLetterLength = decryption.ciphertext.length / keyArray.length;
 
     // set ciphertextArray to sortedKeyArray
-    _.each(sortedKeyArray, (k) => {
-      const selectedItem = _.find(ciphertextArray, (item) => item.key === k);
+    _.each(sortedKeyArray, (k, i) => {
+      const selectedItem = _.find(ciphertextArray, (item) => item.key === k && item.values.length === 0);
 
       if (numberForStatic === 0) { // each
-        for (let round = 0; round < (ciphertextArray.length % keyArray.length); round++) {
+        for (let round = 0; round < (ciphertextArray.length / keyArray.length); round++) {
           selectedItem.values[round] = ciphertextArrayForTakeLetter[0];
           ciphertextArrayForTakeLetter.splice(0, 1);
         }
@@ -181,6 +181,7 @@ export class AppComponent {
 
         console.log(selectedItem);
       }
+
       // _.each(ciphertextArray, (item) => {
       //   if (item.key === k) {
       //     item = selectedItem;
@@ -189,6 +190,9 @@ export class AppComponent {
       // console.log(ciphertextArray);
     });
 
+    console.log(sortedKeyArray);
+    console.log(ciphertextArray);
+    // debugger;
     // console.log(ciphertextArray);
 
     // let's sorting back to original
